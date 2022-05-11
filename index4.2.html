@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Главная</title>
+</head>
+
+<body>
+  <script>
+    function get_cookie(cookie_name) {
+      var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+
+      if (results)
+        return (unescape(results[2]));
+      else
+        return null;
+    }
+    var x = get_cookie("user");
+    document.write(x);
+  </script>
+  <p id="p"></p>
+  <form name="userForm" action="getData">
+    <input placeholder="Логин" name="log" type="text"><br>
+    <input placeholder="Пароль" name="pas" type="password"><br>
+    <input type="submit" value="Вход" name="postButton">
+  </form>
+  <a href="/ch">чат</a>
+  <script>
+    var form = document.forms.userForm;
+    form.postButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      var formData = new FormData(form);
+      var request = new XMLHttpRequest();
+      request.open("POST", form.action, false);
+      request.onreadystatechange = () => {
+        if (request.readyState == 4 && request.status == 200) {
+          document.cookie = "user=" + request.responseText;
+        }
+      }
+      request.send(formData);
+      form.log.value = "";
+      form.pas.value = "";
+
+    });
+  </script>
+</body>
+
+</html>
